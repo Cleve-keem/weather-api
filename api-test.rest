@@ -1,0 +1,4 @@
+POST http://localhost:3030/api/v1/weather
+Content-Type: application/json
+
+{"cityName": "London,UK"}
