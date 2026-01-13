@@ -28,7 +28,7 @@ Lightweight Express-based proxy that fetches weather data from Visual Crossing a
 
 ## Environment (example)
 
-Create a file named `.env` or use `.env.local` with these variables:
+Create a file named `.env` or use `.env.development` with these variables:
 
 WEATHER_API_BASE_URL=https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services
 WEATHER_API_KEY=your_visualcrossing_api_key
