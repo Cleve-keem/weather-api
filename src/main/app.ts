@@ -1,9 +1,11 @@
 import express, { Application, Request, Response } from "express";
 import weatherController from "../controllers/weatherController.js";
+import limiter from "../middleware/weatherLimit.js";
 
 const expressLoader = (): Application => {
   const app: Application = express();
 
+  app.use(limiter);
   app.use(express.json());
 
   app.get("/health", (req: Request, res: Response) => {
