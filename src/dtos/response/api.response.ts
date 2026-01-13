@@ -3,30 +3,31 @@ import { Response } from "express";
 const sendSucess = (
   res: Response,
   statusCode: number,
-  detail: string,
-  data: unknown,
-  links?: Record<string, { href: string; method: string }>
+  paylaod: unknown,
+  detail?: string
 ) => {
-  res
-    .status(statusCode)
-    .json({ status: "success", detail, data, ...(links && { _links: links }) });
+  res.status(statusCode).json({
+    status: "success",
+    detail,
+    data: paylaod,
+  });
 };
 
 const sendError = (
   res: Response,
   statusCode: number,
-  type: string = "/errors/general",
+  // type: string = "/errors/general",
   title: string,
   detail: string,
   instance?: string
 ) => {
   res.status(statusCode).json({
-    status: statusCode,
-    type,
+    status: "error",
+    code: statusCode,
     title,
     detail,
     instance: instance || res.req.originalUrl,
   });
 };
 
-export { sendSucess, sendError};
+export { sendSucess, sendError };

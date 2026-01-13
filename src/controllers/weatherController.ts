@@ -1,12 +1,9 @@
-import axios from "axios";
 import { Request, Response } from "express";
 import { sendError, sendSucess } from "../dtos/response/api.response.js";
+import fetchWeatherDetails from "../services/fetch-weather.js";
 
 const weatherController = async (req: Request, res: Response) => {
-  const { city } = req.query;
-
-  const BASE_URL = process.env.WEATHER_API_BASE_URL!;
-  const API_KEY = process.env.WEATHER_API_KEY!;
+  const city = req.query.city as string;
 
   if (!city) {
     return sendError(
@@ -19,15 +16,8 @@ const weatherController = async (req: Request, res: Response) => {
   }
 
   try {
-    const response = await axios.get(`${BASE_URL}/${city}?key=${API_KEY}`, {
-      timeout: 5000,
-    });
-    return sendSucess(res, 200, response.data, {
-      links: {
-        self: { href: req.originalUrl, method: "GET" },
-        health: { href: "/health", method: "GET" },
-      },
-    });
+    const simplifiedWeather = fetchWeatherDetails(city);
+    return sendSucess(res, 200, simplifiedWeather);
   } catch (err: any) {
     console.error(`[ERROR] ${err.message}`);
     return sendError(
