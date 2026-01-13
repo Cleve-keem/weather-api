@@ -4,7 +4,7 @@ import { sendError, sendSucess } from "../dtos/response/api.response.js";
 
 const weatherController = async (req: Request, res: Response) => {
   const { city } = req.query;
-  
+
   const BASE_URL = process.env.WEATHER_API_BASE_URL!;
   const API_KEY = process.env.WEATHER_API_KEY!;
 
@@ -19,7 +19,9 @@ const weatherController = async (req: Request, res: Response) => {
   }
 
   try {
-    const response = await axios.get(`${BASE_URL}/${city}?key=${API_KEY}`);
+    const response = await axios.get(`${BASE_URL}/${city}?key=${API_KEY}`, {
+      timeout: 5000,
+    });
     return sendSucess(res, 200, response.data, {
       links: {
         self: { href: req.originalUrl, method: "GET" },
