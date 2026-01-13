@@ -1,29 +1,32 @@
 import { Response } from "express";
 
-const sucessResponse = (
+const sendSucess = (
   res: Response,
   statusCode: number,
-  message: string,
-  data: unknown
+  detail: string,
+  data: unknown,
+  links?: Record<string, { href: string; method: string }>
 ) => {
-  res.status(statusCode).json({ status: "success", message, data });
+  res
+    .status(statusCode)
+    .json({ status: "success", detail, data, ...(links && { _links: links }) });
 };
 
-const errorResponse = (
+const sendError = (
   res: Response,
   statusCode: number,
-  message: string,
-  error: any = null
+  type: string = "/errors/general",
+  title: string,
+  detail: string,
+  instance?: string
 ) => {
   res.status(statusCode).json({
-    status: "error",
-    message,
-    error: {
-      message: error.message,
-      code: error.code,
-      // stack: error.stack,
-    },
+    status: statusCode,
+    type,
+    title,
+    detail,
+    instance: instance || res.req.originalUrl,
   });
 };
 
-export { sucessResponse, errorResponse };
+export { sendSucess, sendError};
