@@ -16,7 +16,6 @@ const sendSucess = (
 const sendError = (
   res: Response,
   statusCode: number,
-  // type: string = "/errors/general",
   title: string,
   detail: string,
   instance?: string
