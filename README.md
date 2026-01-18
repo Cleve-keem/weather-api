@@ -2,64 +2,75 @@
 
 Lightweight Express-based proxy that fetches weather data from Visual Crossing and exposes a small HTTP API for health checks and city weather lookups.
 
-## Contents
+Project link: https://roadmap.sh/projects/weather-api-wrapper-service
 
-- src/main/app.ts — express app initialization (expressLoader)
-- src/server.ts — server bootstrap (startServer)
-- src/dtos/response/api.response.ts — centralized error response helpers
-- src/config/process-supervisor.ts — process supervision utilities
-- .env.development — example environment variables
+## Overview
+
+This project provides a small HTTP server that:
+
+- Exposes a health check endpoint
+- Proxies weather lookups to Visual Crossing
+- Uses centralized error handling and process supervision utilities
+
+## Key files
+
+- src/main/app.ts — Express app initialization (expressLoader)
+- src/server.ts — Server bootstrap (startServer)
+- src/dtos/response/api.response.ts — Centralized API error responses
+- src/config/process-supervisor.ts — Graceful shutdown and restart helpers
+- .env.local — Example environment variables
+- .gitignore — excludes node_modules, dist, and environment files
 
 ## Features
 
-- Health check endpoint
-- Weather endpoint that proxies requests to Visual Crossing
-- Centralized error handling and structured responses
-- Simple configuration via environment variables
-- Ready for local development and production
+- GET /health — basic health check
+- GET /api/v1/weather?city=<city> — fetches weather for the specified city via Visual Crossing
+- Centralized error responses and structured logging
+- Easy local development and production build
 
-## Endpoints
+## Environment variables
 
-- GET /health
-  - Response: { "status": "UP", "pid": <process id> }
-- GET /api/v1/weather?city=<city>
-  - Example: GET /api/v1/weather?city=London
-  - Proxies to Visual Crossing using configured base URL and API key
+Create a `.env` or use `.env.local` with values like:
 
-## Environment (example)
-
-Create a file named `.env` or use `.env.development` with these variables:
-
-WEATHER_API_BASE_URL=https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services
-WEATHER_API_KEY=your_visualcrossing_api_key
-PORT=3030
+WEATHER_API_BASE_URL=https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services  
+WEATHER_API_KEY=your_visualcrossing_api_key  
+PORT=3030  
 LOG_LEVEL=info
 
-Do not commit real API keys.
+Do not commit real API keys. The repository already ignores `.env.*` files via .gitignore.
 
 ## Local development (Windows)
 
-1. Install dependencies
-   - PowerShell/CMD: npm install
-2. Run in development (with nodemon if configured)
+1. Install dependencies:
+   - PowerShell / CMD: npm install
+2. Start in development (nodemon recommended):
    - npm run dev
-3. Build and run production
+3. Build and run production:
    - npm run build
    - npm start
 
 Example request:
 curl "http://localhost:3030/api/v1/weather?city=London"
 
-## Error handling & logging
+## Scripts (recommended)
 
-- API errors are handled centrally via src/dtos/response/api.response.ts.
-- Process supervision utilities are in src/config/process-supervisor.ts to help with graceful shutdowns and restarts.
+Ensure package.json contains at least:
+
+- "dev" — start in dev mode (e.g., nodemon)
+- "build" — compile/prepare for production
+- "start" — run the built app
+- "test" — run unit tests
+
+## Testing & Linting
+
+- Add unit tests for controllers and utils (suggest Jest + supertest for HTTP tests).
+- Add linting (ESLint) and formatting (Prettier) as CI checks.
 
 ## Contributing
 
 - Fork, create a feature branch, add tests, open a PR.
-- Follow existing code style and add descriptive commit messages.
+- Follow existing code style and include descriptive commits.
 
 ## License
 
-No License.
+Add a LICENSE file (e.g., MIT) before publishing.

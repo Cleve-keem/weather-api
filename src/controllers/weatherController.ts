@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { sendError, sendSucess } from "../dtos/response/api.response.js";
 import fetchWeatherDetails from "../services/fetch-weather.js";
+import { client } from "../lib/redis-client.js";
 
 const weatherController = async (req: Request, res: Response) => {
   const city = req.query.city as string;
@@ -16,7 +17,17 @@ const weatherController = async (req: Request, res: Response) => {
   }
 
   try {
-    const simplifiedWeather = fetchWeatherDetails(city);
+    const cachedWeather = await client.get(city);
+    if (cachedWeather) {
+      console.log("[CACHE] Returning cached data");
+      return sendSucess(res, 200, JSON.parse(cachedWeather));
+    }
+
+    const simplifiedWeather = await fetchWeatherDetails(city);
+    await client.set(city, JSON.stringify(simplifiedWeather), {
+      EX: 1000,
+    });
+
     return sendSucess(res, 200, simplifiedWeather);
   } catch (err: any) {
     console.error(`[ERROR] ${err.message}`);
